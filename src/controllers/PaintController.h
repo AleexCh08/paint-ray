@@ -6,6 +6,7 @@ private:
     PaintDocument* m_document;
     bool m_isDrawing;
     bool m_isMovingShape;
+    bool m_isDraggingPoint;
     Vector2 m_lastMousePos;
 
 public:

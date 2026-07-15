@@ -28,7 +28,8 @@ public:
 
     // Métodos específicos
     void SetEnd(Vector2 end);
-    void HandleDragging(Vector2 point);
+    bool TryGrabControlPoint(Vector2 point);
+    void DragControlPoint(Vector2 point);
     void StopDragging();
 
 private:

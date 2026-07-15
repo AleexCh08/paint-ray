@@ -105,23 +105,19 @@ void BezierCurve::SetPoints(Vector2 start, Vector2 end) {
     m_points[2] = { start.x + (end.x - start.x) * 2.0f / 3.0f, start.y + (end.y - start.y) * 2.0f / 3.0f };
 }
 
-void BezierCurve::HandleDragging(Vector2 point) {
-    float ctrlSizeHitbox = 8.0f; // Hitbox ligeramente mayor para que sea fácil hacer clic
-    
-    // Identificar qué punto de los 4 se agarró
-    if (m_draggingControlPoint == -1) {
-        for (int i = 0; i < 4; i++) {
-            if (CheckCollisionPointCircle(point, m_points[i], ctrlSizeHitbox)) {
-                m_draggingControlPoint = i;
-                break;
-            }
+bool BezierCurve::TryGrabControlPoint(Vector2 point) {
+    float ctrlSizeHitbox = 8.0f; 
+    for (int i = 0; i < 4; i++) {
+        if (CheckCollisionPointCircle(point, m_points[i], ctrlSizeHitbox)) {
+            m_draggingControlPoint = i;
+            return true;
         }
     }
+    return false;
+}
 
-    // Actualizar la posición del punto arrastrado
-    if (m_draggingControlPoint != -1) {
-        m_points[m_draggingControlPoint] = point;
-    }
+void BezierCurve::DragControlPoint(Vector2 point) {
+    if (m_draggingControlPoint != -1) m_points[m_draggingControlPoint] = point;
 }
 
 void BezierCurve::StopDragging() {

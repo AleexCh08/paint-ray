@@ -5,7 +5,8 @@
 #include "raymath.h" 
 
 int main() {
-    InitWindow(1280, 720, "Raylib Paint Clone");
+    SetConfigFlags(FLAG_WINDOW_MAXIMIZED | FLAG_WINDOW_RESIZABLE);
+    InitWindow(1440, 900, "Paint Ray");
     SetTargetFPS(60);
 
     PaintDocument model;

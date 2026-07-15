@@ -101,23 +101,21 @@ void Line::SetEnd(Vector2 end) {
     m_end = end;
 }
 
-void Line::HandleDragging(Vector2 point) {
-    if (m_draggingControlPoint == -1) {
-        const float controlPointSize = 4.0f;
-        if (CheckCollisionPointCircle(point, m_start, controlPointSize)) {
-            m_draggingControlPoint = 0;
-        } else if (CheckCollisionPointCircle(point, m_end, controlPointSize)) {
-            m_draggingControlPoint = 1;
-        }
+bool Line::TryGrabControlPoint(Vector2 point) {
+    const float controlPointSize = 4.0f;
+    if (CheckCollisionPointCircle(point, m_start, controlPointSize)) {
+        m_draggingControlPoint = 0;
+        return true;
+    } else if (CheckCollisionPointCircle(point, m_end, controlPointSize)) {
+        m_draggingControlPoint = 1;
+        return true;
     }
+    return false;
+}
 
-    if (m_draggingControlPoint == 0) {
-        m_start = point;
-    } else if (m_draggingControlPoint == 1) {
-        m_end = point;
-    } else {
-        StopDragging();
-    }
+void Line::DragControlPoint(Vector2 point) {
+    if (m_draggingControlPoint == 0) m_start = point;
+    else if (m_draggingControlPoint == 1) m_end = point;
 }
 
 void Line::StopDragging() {
