@@ -12,8 +12,8 @@ PaintController::PaintController(PaintDocument* document)
 
 void PaintController::Update() {
     Vector2 mousePos = GetMousePosition();
-
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+    bool isMouseOverUI = (mousePos.y <= 40) || (mousePos.x <= 80);
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !isMouseOverUI) {
         HandleMouseDown(mousePos);
     } 
     else if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -99,12 +99,20 @@ void PaintController::HandleMouseDrag(Vector2 mousePos) {
             }
             case SHAPE_RECTANGLE: {
                 RectangleShape* r = (RectangleShape*)selected;
-                r->SetBounds({m_lastMousePos.x, m_lastMousePos.y, mousePos.x - m_lastMousePos.x, mousePos.y - m_lastMousePos.y});
+                float rx = fminf(m_lastMousePos.x, mousePos.x);
+                float ry = fminf(m_lastMousePos.y, mousePos.y);
+                float rw = fabsf(mousePos.x - m_lastMousePos.x);
+                float rh = fabsf(mousePos.y - m_lastMousePos.y);
+                r->SetBounds({rx, ry, rw, rh});
                 break;
             }
             case SHAPE_ELLIPSE: {
                 EllipseShape* e = (EllipseShape*)selected;
-                e->SetBounds({m_lastMousePos.x, m_lastMousePos.y, mousePos.x - m_lastMousePos.x, mousePos.y - m_lastMousePos.y});
+                float ex = fminf(m_lastMousePos.x, mousePos.x);
+                float ey = fminf(m_lastMousePos.y, mousePos.y);
+                float ew = fabsf(mousePos.x - m_lastMousePos.x);
+                float eh = fabsf(mousePos.y - m_lastMousePos.y);
+                e->SetBounds({ex, ey, ew, eh});
                 break;
             }
             case SHAPE_TRIANGLE: {

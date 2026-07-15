@@ -23,6 +23,11 @@ if(WIN32)
     string(REPLACE "-mwindows" "-mconsole" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
+
+message(STATUS "Descargando raygui.h...")
+file(DOWNLOAD "https://raw.githubusercontent.com/raysan5/raygui/4.0/src/raygui.h" "${CMAKE_SOURCE_DIR}/src/raygui.h")
+
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS "src/*.h")
 
