@@ -14,9 +14,6 @@ int main() {
     PaintView view(&model);
     PaintController controller(&model);
 
-    // Por defecto activamos la herramienta de Rectángulo para probar
-    model.SetCurrentTool(SHAPE_RECTANGLE); 
-
     // 3. Bucle Principal
     while (!WindowShouldClose()) {
         controller.Update();  // Procesa eventos

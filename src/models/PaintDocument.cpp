@@ -4,8 +4,8 @@
 PaintDocument::PaintDocument() {
     m_selectedShape = nullptr;
     m_currentMode = MODE_OPTIMIZED;
-    m_currentTool = SHAPE_LINE;
-    m_currentColor = BLACK;
+    m_currentTool = SHAPE_NONE;
+    m_currentColor = WHITE;
 }
 
 PaintDocument::~PaintDocument() {

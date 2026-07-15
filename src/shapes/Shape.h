@@ -3,7 +3,8 @@
 #include "raylib.h"
 
 enum ShapeType {
-    SHAPE_LINE,
+    SHAPE_NONE = -1,
+    SHAPE_LINE = 0,
     SHAPE_CIRCLE,
     SHAPE_ELLIPSE,
     SHAPE_RECTANGLE,

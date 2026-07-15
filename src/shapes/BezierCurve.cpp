@@ -2,7 +2,7 @@
 #include <cmath>
 
 BezierCurve::BezierCurve(Vector2 start, Vector2 end, Color color) 
-    : m_color(color), m_colorBorder(BLACK), m_draggingControlPoint(-1) 
+    : m_color(color), m_colorBorder(color), m_draggingControlPoint(-1) 
 {
     m_type = SHAPE_BEZIER;
     SetPoints(start, end);
