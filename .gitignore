@@ -1,0 +1,47 @@
+# =========================
+# CMake y Build
+# =========================
+build/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# =========================
+# Ejecutables y binarios
+# =========================
+*.exe
+*.o
+*.obj
+*.out
+*.dll
+*.lib
+*.a
+*.app
+bin/
+obj/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# Visual Studio (Anterior entorno MFC)
+# =========================
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+
+# =========================
+# Archivos del Sistema Operativo
+# =========================
+.DS_Store
+Thumbs.db
