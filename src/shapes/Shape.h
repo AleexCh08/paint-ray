@@ -22,7 +22,6 @@ public:
     ShapeType m_type;
 
     virtual ~Shape() {}
-
     virtual void RenderPixelByPixel() = 0;
     virtual void RenderOptimized() = 0;
     

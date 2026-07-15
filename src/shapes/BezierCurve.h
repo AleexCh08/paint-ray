@@ -25,7 +25,6 @@ public:
     void SetColorBorder(Color color) override;
     Color GetColorBorder() const override;
 
-    // Métodos específicos de la curva
     void SetPoints(Vector2 start, Vector2 end);
     bool TryGrabControlPoint(Vector2 point);
     void DragControlPoint(Vector2 point);

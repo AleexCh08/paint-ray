@@ -106,8 +106,8 @@ void PaintView::Render() {
     if (m_document->IsContextMenuOpen()) {
         Vector2 pos = m_document->GetContextMenuPos();
         
-        DrawRectangle((int)pos.x, (int)pos.y, 140, 122, Color{ 45, 45, 45, 255 });
-        DrawRectangleLines((int)pos.x, (int)pos.y, 140, 122, LIGHTGRAY);
+        DrawRectangle((int)pos.x, (int)pos.y, 140, 184, Color{ 45, 45, 45, 255 });
+        DrawRectangleLines((int)pos.x, (int)pos.y, 140, 184, LIGHTGRAY);
 
         if (GuiButton({ pos.x + 5, pos.y + 10, 130, 24 }, "Traer al frente")) {
             m_document->MoveShapeToFront(m_document->GetSelectedShape());
@@ -123,6 +123,18 @@ void PaintView::Render() {
         }
         if (GuiButton({ pos.x + 5, pos.y + 88, 130, 24 }, "Enviar al fondo")) {
             m_document->MoveShapeToBack(m_document->GetSelectedShape());
+            m_document->SetContextMenuState(false);
+        }
+        DrawLine((int)pos.x + 5, (int)pos.y + 118, (int)pos.x + 135, (int)pos.y + 118, GRAY);
+
+        if (GuiButton({ pos.x + 5, pos.y + 126, 130, 24 }, "Aplicar Relleno")) {
+            Shape* selected = m_document->GetSelectedShape();
+            if (selected) selected->SetColor(m_document->GetCurrentFillColor());
+            m_document->SetContextMenuState(false);
+        }
+        if (GuiButton({ pos.x + 5, pos.y + 154, 130, 24 }, "Aplicar Contorno")) {
+            Shape* selected = m_document->GetSelectedShape();
+            if (selected) selected->SetColorBorder(m_document->GetCurrentBorderColor());
             m_document->SetContextMenuState(false);
         }
     }

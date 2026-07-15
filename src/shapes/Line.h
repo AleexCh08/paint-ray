@@ -26,7 +26,6 @@ public:
     void SetColorBorder(Color color) override;
     Color GetColorBorder() const override;
 
-    // Métodos específicos
     void SetEnd(Vector2 end);
     bool TryGrabControlPoint(Vector2 point);
     void DragControlPoint(Vector2 point);

@@ -23,7 +23,7 @@ void PaintController::Update() {
     bool isInsideContextMenu = false;
     if (m_document->IsContextMenuOpen()) {
         Vector2 menuPos = m_document->GetContextMenuPos();
-        Rectangle menuRect = { menuPos.x, menuPos.y, 140, 122 };
+        Rectangle menuRect = { menuPos.x, menuPos.y, 140, 184 };
         isInsideContextMenu = CheckCollisionPointRec(mousePos, menuRect);
     }
 
