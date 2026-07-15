@@ -12,22 +12,21 @@ private:
     Color m_currentFillColor;
     Color m_currentBorderColor;
     bool m_editBorderMode;
+    bool m_showContextMenu;
+    Vector2 m_contextMenuPos;
 
 public:
     PaintDocument();
     ~PaintDocument();
 
-    // Gestión de figuras
     void AddShape(Shape* shape);
     void RemoveShape(Shape* shape);
     void ClearAll();
     const std::vector<Shape*>& GetShapes() const;
 
-    // Estado de selección
     void SetSelectedShape(Shape* shape);
     Shape* GetSelectedShape() const;
 
-    // Estados generales
     void SetDrawingMode(DrawingMode mode);
     DrawingMode GetDrawingMode() const;
 
@@ -42,4 +41,10 @@ public:
 
     void SetEditBorderMode(bool editBorder);
     bool IsEditBorderMode() const;
+
+    void MoveShapeToFront(Shape* shape);
+    void MoveShapeToBack(Shape* shape);
+    void SetContextMenuState(bool open, Vector2 pos = {0, 0});
+    bool IsContextMenuOpen() const;
+    Vector2 GetContextMenuPos() const;
 };

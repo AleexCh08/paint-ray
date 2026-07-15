@@ -8,6 +8,8 @@ PaintDocument::PaintDocument() {
     m_currentFillColor = WHITE;     
     m_currentBorderColor = BLACK;   
     m_editBorderMode = false;
+    m_showContextMenu = false;
+    m_contextMenuPos = {0, 0};
 }
 
 PaintDocument::~PaintDocument() {
@@ -48,3 +50,27 @@ void PaintDocument::SetCurrentBorderColor(Color color) { m_currentBorderColor = 
 Color PaintDocument::GetCurrentBorderColor() const { return m_currentBorderColor; }
 void PaintDocument::SetEditBorderMode(bool editBorder) { m_editBorderMode = editBorder; }
 bool PaintDocument::IsEditBorderMode() const { return m_editBorderMode; }
+
+void PaintDocument::MoveShapeToFront(Shape* shape) {
+    auto it = std::find(m_shapes.begin(), m_shapes.end(), shape);
+    if (it != m_shapes.end()) {
+        m_shapes.erase(it);
+        m_shapes.push_back(shape); 
+    }
+}
+
+void PaintDocument::MoveShapeToBack(Shape* shape) {
+    auto it = std::find(m_shapes.begin(), m_shapes.end(), shape);
+    if (it != m_shapes.end()) {
+        m_shapes.erase(it);
+        m_shapes.insert(m_shapes.begin(), shape); 
+    }
+}
+
+void PaintDocument::SetContextMenuState(bool open, Vector2 pos) {
+    m_showContextMenu = open;
+    m_contextMenuPos = pos;
+}
+
+bool PaintDocument::IsContextMenuOpen() const { return m_showContextMenu; }
+Vector2 PaintDocument::GetContextMenuPos() const { return m_contextMenuPos; }

@@ -11,26 +11,51 @@ PaintController::PaintController(PaintDocument* document)
     : m_document(document), m_isDrawing(false), m_isMovingShape(false), m_isDraggingPoint(false) {}
 
 void PaintController::Update() {
-    if (IsKeyPressed(KEY_ESCAPE)) m_document->SetSelectedShape(nullptr);
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        m_document->SetSelectedShape(nullptr);
+        m_document->SetContextMenuState(false);
+    }
 
     Vector2 mousePos = GetMousePosition();
-    
     Rectangle canvas = { 280, 60, (float)GetScreenWidth() - 400, (float)GetScreenHeight() - 80 };
     bool isInsideCanvas = CheckCollisionPointRec(mousePos, canvas);
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isInsideCanvas) HandleMouseDown(mousePos);
+    bool isInsideContextMenu = false;
+    if (m_document->IsContextMenuOpen()) {
+        Vector2 menuPos = m_document->GetContextMenuPos();
+        Rectangle menuRect = { menuPos.x, menuPos.y, 140, 70 };
+        isInsideContextMenu = CheckCollisionPointRec(mousePos, menuRect);
+    }
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && isInsideCanvas) {
+        Shape* clickedShape = GetShapeAtPoint(mousePos);
+        if (clickedShape) {
+            m_document->SetSelectedShape(clickedShape);
+            m_document->SetContextMenuState(true, mousePos);
+        } else {
+            m_document->SetContextMenuState(false);
+        }
+    }
+    else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        if (!isInsideContextMenu) {
+            m_document->SetContextMenuState(false);
+            if (isInsideCanvas) HandleMouseDown(mousePos);
+        }
+    }
     else if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) HandleMouseDrag(mousePos);
     else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) HandleMouseUp();
 
     if (IsKeyPressed(KEY_DELETE)) {
         Shape* selected = m_document->GetSelectedShape();
-        if (selected) m_document->RemoveShape(selected);
+        if (selected) {
+            m_document->RemoveShape(selected);
+            m_document->SetContextMenuState(false);
+        }
     }
 }
 
 Shape* PaintController::GetShapeAtPoint(Vector2 point) {
     const auto& shapes = m_document->GetShapes();
-    // Iteramos en reversa para seleccionar primero la figura que está por encima
     for (auto it = shapes.rbegin(); it != shapes.rend(); ++it) {
         if ((*it)->IsPointInside(point)) {
             return *it;

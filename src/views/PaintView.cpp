@@ -103,5 +103,20 @@ void PaintView::Render() {
         m_document->SetDrawingMode(isOpt ? MODE_PIXEL_BY_PIXEL : MODE_OPTIMIZED);
     }
 
+    if (m_document->IsContextMenuOpen()) {
+        Vector2 pos = m_document->GetContextMenuPos();
+        
+        DrawRectangle((int)pos.x, (int)pos.y, 140, 70, Color{ 45, 45, 45, 255 });
+        DrawRectangleLines((int)pos.x, (int)pos.y, 140, 70, LIGHTGRAY);
+
+        if (GuiButton({ pos.x + 5, pos.y + 10, 130, 24 }, "Traer al frente")) {
+            m_document->MoveShapeToFront(m_document->GetSelectedShape());
+            m_document->SetContextMenuState(false);
+        }
+        if (GuiButton({ pos.x + 5, pos.y + 36, 130, 24 }, "Enviar al fondo")) {
+            m_document->MoveShapeToBack(m_document->GetSelectedShape());
+            m_document->SetContextMenuState(false);
+        }
+    }
     EndDrawing();
 }
