@@ -47,7 +47,6 @@ void PaintController::HandleMouseDown(Vector2 mousePos) {
     m_lastMousePos = mousePos;
     Shape* clickedShape = GetShapeAtPoint(mousePos);
 
-    // 1. Si hicimos clic en una figura, la seleccionamos
     if (clickedShape) {
         m_document->SetSelectedShape(clickedShape);
         m_isMovingShape = true;
