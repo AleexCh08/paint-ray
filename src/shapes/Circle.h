@@ -26,4 +26,5 @@ public:
     Color GetColorBorder() const override;
 
     void SetRadius(float radius);
+    std::string Serialize() const override;
 };

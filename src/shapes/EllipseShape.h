@@ -25,4 +25,5 @@ public:
     Color GetColorBorder() const override;
 
     void SetBounds(Rectangle bounds);
+    std::string Serialize() const override;
 };

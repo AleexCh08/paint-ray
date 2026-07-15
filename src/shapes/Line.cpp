@@ -1,6 +1,7 @@
 #include "Line.h"
 #include <cmath>
 #include <algorithm>
+#include <sstream>
 
 Line::Line(Vector2 start, Vector2 end, Color color) 
     : m_start(start), m_end(end), m_color(color), m_colorBorder(color), m_draggingControlPoint(-1) 
@@ -127,3 +128,10 @@ Color Line::GetColor() const { return m_color; }
 
 void Line::SetColorBorder(Color color) { m_colorBorder = color; }
 Color Line::GetColorBorder() const { return m_colorBorder; }
+
+std::string Line::Serialize() const {
+    std::ostringstream oss;
+    oss << "LINE " << m_start.x << " " << m_start.y << " " << m_end.x << " " << m_end.y << " "
+        << (m_colorBorder.r / 255.f) << " " << (m_colorBorder.g / 255.f) << " " << (m_colorBorder.b / 255.f);
+    return oss.str();
+}

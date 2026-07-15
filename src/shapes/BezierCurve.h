@@ -29,6 +29,8 @@ public:
     bool TryGrabControlPoint(Vector2 point);
     void DragControlPoint(Vector2 point);
     void StopDragging();
+    std::string Serialize() const override;
+    void SetControlPoints(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3);
 
 private:
     Vector2 CalculateBezierPoint(float t) const;

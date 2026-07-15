@@ -1,4 +1,5 @@
 #include "RectangleShape.h"
+#include <sstream>
 
 RectangleShape::RectangleShape(Rectangle bounds, Color color) 
     : m_bounds(bounds), m_color(color), m_colorBorder(BLACK) 
@@ -14,14 +15,12 @@ void RectangleShape::RenderPixelByPixel() {
     int right = (int)(m_bounds.x + m_bounds.width);
     int bottom = (int)(m_bounds.y + m_bounds.height);
 
-    // Relleno iterativo original
     for (int y = top; y <= bottom; y++) {
         for (int x = left; x <= right; x++) {
             DrawPixel(x, y, m_color);
         }
     }
 
-    // Bordes originales
     for (int x = left; x <= right; x++) {
         DrawPixel(x, top, m_colorBorder); 
         DrawPixel(x, bottom, m_colorBorder); 
@@ -54,7 +53,6 @@ void RectangleShape::Move(Vector2 offset) {
 }
 
 bool RectangleShape::IsPointInside(Vector2 point) {
-    // Raylib provee una función nativa de colisión mucho más segura
     return CheckCollisionPointRec(point, m_bounds);
 }
 
@@ -63,3 +61,11 @@ Color RectangleShape::GetColor() const { return m_color; }
 void RectangleShape::SetColorBorder(Color color) { m_colorBorder = color; }
 Color RectangleShape::GetColorBorder() const { return m_colorBorder; }
 void RectangleShape::SetBounds(Rectangle bounds) { m_bounds = bounds; }
+
+std::string RectangleShape::Serialize() const {
+    std::ostringstream oss;
+    oss << "FILLED_RECTANGLE " << m_bounds.x << " " << m_bounds.y << " " << m_bounds.width << " " << m_bounds.height << " "
+        << (m_colorBorder.r / 255.f) << " " << (m_colorBorder.g / 255.f) << " " << (m_colorBorder.b / 255.f) << " "
+        << (m_color.r / 255.f) << " " << (m_color.g / 255.f) << " " << (m_color.b / 255.f);
+    return oss.str();
+}

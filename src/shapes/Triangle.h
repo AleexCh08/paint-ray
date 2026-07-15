@@ -25,4 +25,5 @@ public:
     Color GetColorBorder() const override;
 
     void SetPoints(Vector2 p1, Vector2 p2, Vector2 p3);
+    std::string Serialize() const override;
 };

@@ -1,5 +1,6 @@
 #include "BezierCurve.h"
 #include <cmath>
+#include <sstream>
 
 BezierCurve::BezierCurve(Vector2 start, Vector2 end, Color color) 
     : m_color(color), m_colorBorder(color), m_draggingControlPoint(-1) 
@@ -10,7 +11,6 @@ BezierCurve::BezierCurve(Vector2 start, Vector2 end, Color color)
 
 BezierCurve::~BezierCurve() {}
 
-// Ecuación paramétrica de la curva de Bézier cúbica (Tu lógica original mejorada)
 Vector2 BezierCurve::CalculateBezierPoint(float t) const {
     float u = 1.0f - t;
     float tt = t * t;
@@ -41,7 +41,6 @@ void BezierCurve::RenderPixelByPixel() {
         }
     };
 
-    // Interpolamos el valor de t de 0 a 1 para trazar los segmentos
     for (int i = 1; i <= segments; i++) {
         float t = (float)i / segments;
         Vector2 currentPoint = CalculateBezierPoint(t);
@@ -51,18 +50,14 @@ void BezierCurve::RenderPixelByPixel() {
 }
 
 void BezierCurve::RenderOptimized() {
-    // Raylib 5.0 incorpora una función hiper-optimizada para splines cúbicos
     DrawSplineSegmentBezierCubic(m_points[0], m_points[1], m_points[2], m_points[3], 2.0f, m_colorBorder);
 }
 
 void BezierCurve::DrawSelection() {
-    // Dibujar líneas guía sutiles conectando los puntos de control con los extremos
     DrawLineV(m_points[0], m_points[1], Fade(GRAY, 0.5f));
     DrawLineV(m_points[3], m_points[2], Fade(GRAY, 0.5f));
     
-    // Resaltar la trayectoria de la curva
-    DrawSplineSegmentBezierCubic(m_points[0], m_points[1], m_points[2], m_points[3], 4.0f, Fade(RED, 0.5f));
-    
+    DrawSplineSegmentBezierCubic(m_points[0], m_points[1], m_points[2], m_points[3], 4.0f, Fade(RED, 0.5f));    
     DrawControlPoints();
 }
 
@@ -82,7 +77,6 @@ void BezierCurve::Move(Vector2 offset) {
 }
 
 bool BezierCurve::IsPointInside(Vector2 point) {
-    // Muestreamos a lo largo de la curva para ver si el clic choca con el trazo
     for (float t = 0.0f; t <= 1.0f; t += 0.02f) {
         Vector2 p = CalculateBezierPoint(t);
         if (CheckCollisionPointCircle(point, p, 5.0f)) {
@@ -100,7 +94,6 @@ Color BezierCurve::GetColorBorder() const { return m_colorBorder; }
 void BezierCurve::SetPoints(Vector2 start, Vector2 end) {
     m_points[0] = start;
     m_points[3] = end;
-    // Puntos de control inician equidistantes para formar una línea recta al nacer
     m_points[1] = { start.x + (end.x - start.x) / 3.0f, start.y + (end.y - start.y) / 3.0f };
     m_points[2] = { start.x + (end.x - start.x) * 2.0f / 3.0f, start.y + (end.y - start.y) * 2.0f / 3.0f };
 }
@@ -122,4 +115,16 @@ void BezierCurve::DragControlPoint(Vector2 point) {
 
 void BezierCurve::StopDragging() {
     m_draggingControlPoint = -1;
+}
+
+void BezierCurve::SetControlPoints(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3) {
+    m_points[0] = p0; m_points[1] = p1; m_points[2] = p2; m_points[3] = p3;
+}
+
+std::string BezierCurve::Serialize() const {
+    std::ostringstream oss;
+    oss << "BEZIER 4 " << m_points[0].x << " " << m_points[0].y << " " << m_points[1].x << " " << m_points[1].y << " "
+        << m_points[2].x << " " << m_points[2].y << " " << m_points[3].x << " " << m_points[3].y << " "
+        << (m_colorBorder.r / 255.f) << " " << (m_colorBorder.g / 255.f) << " " << (m_colorBorder.b / 255.f);
+    return oss.str();
 }

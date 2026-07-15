@@ -30,6 +30,7 @@ public:
     bool TryGrabControlPoint(Vector2 point);
     void DragControlPoint(Vector2 point);
     void StopDragging();
+    std::string Serialize() const override;
 
 private:
     void DrawControlPoints();

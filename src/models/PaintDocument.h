@@ -14,6 +14,7 @@ private:
     bool m_editBorderMode;
     bool m_showContextMenu;
     Vector2 m_contextMenuPos;
+    Color m_bgColor;
 
 public:
     PaintDocument();
@@ -49,4 +50,8 @@ public:
     void SetContextMenuState(bool open, Vector2 pos = {0, 0});
     bool IsContextMenuOpen() const;
     Vector2 GetContextMenuPos() const;
+
+    Color GetBackgroundColor() const { return m_bgColor; }
+    void SaveToFile(const std::string& filename) const;
+    void LoadFromFile(const std::string& filename);
 };

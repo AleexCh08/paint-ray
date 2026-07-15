@@ -21,8 +21,7 @@ void PaintView::Render() {
     ClearBackground(Color{ 35, 35, 35, 255 }); 
 
     Rectangle canvas = { 280, 60, (float)GetScreenWidth() - 400, (float)GetScreenHeight() - 80 };
-    
-    DrawRectangleRec(canvas, Color{ 210, 210, 210, 255 }); 
+    DrawRectangleRec(canvas, m_document->GetBackgroundColor()); 
     DrawRectangleLinesEx(canvas, 2.0f, BLACK); 
 
     BeginScissorMode(canvas.x, canvas.y, canvas.width, canvas.height);
@@ -90,6 +89,13 @@ void PaintView::Render() {
     }
 
     DrawRectangle(0, 0, GetScreenWidth(), 40, Color{ 25, 25, 25, 255 });
+
+    if (GuiButton({ 470, 8, 120, 24 }, "Guardar (.rpnt)")) {
+        m_document->SaveToFile("dibujo.rpnt");
+    }
+    if (GuiButton({ 600, 8, 120, 24 }, "Cargar (.rpnt)")) {
+        m_document->LoadFromFile("dibujo.rpnt");
+    }
     
     if (GuiButton({ 10, 8, 120, 24 }, "Limpiar Lienzo")) m_document->ClearAll();
     

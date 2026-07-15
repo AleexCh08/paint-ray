@@ -1,6 +1,7 @@
 #include "Triangle.h"
 #include <cmath>
 #include <algorithm>
+#include <sstream>
 
 Triangle::Triangle(Vector2 p1, Vector2 p2, Vector2 p3, Color color) 
     : m_color(color), m_colorBorder(BLACK) 
@@ -34,12 +35,10 @@ void Triangle::RenderPixelByPixel() {
         }
     };
 
-    // Bordes originales
     drawLine(x0, y0, x1, y1, m_colorBorder);
     drawLine(x1, y1, x2, y2, m_colorBorder);
     drawLine(x2, y2, x0, y0, m_colorBorder);
 
-    // Relleno original mediante Edge Function
     auto edgeFunction = [](Vector2 p0, Vector2 p1, Vector2 p) {
         return (p.x - p0.x) * (p1.y - p0.y) - (p.y - p0.y) * (p1.x - p0.x);
     };
@@ -64,8 +63,6 @@ void Triangle::RenderPixelByPixel() {
 }
 
 void Triangle::RenderOptimized() {
-    // Raylib requiere orden contrario a las agujas del reloj en algunos contextos, 
-    // pero DrawTriangle nativo se maneja bien pasándole los puntos directamente.
     DrawTriangle(m_points[0], m_points[1], m_points[2], m_color);
     DrawTriangleLines(m_points[0], m_points[1], m_points[2], m_colorBorder);
 }
@@ -99,4 +96,12 @@ Color Triangle::GetColorBorder() const { return m_colorBorder; }
 
 void Triangle::SetPoints(Vector2 p1, Vector2 p2, Vector2 p3) {
     m_points[0] = p1; m_points[1] = p2; m_points[2] = p3;
+}
+
+std::string Triangle::Serialize() const {
+    std::ostringstream oss;
+    oss << "FILLED_TRIANGLE " << m_points[0].x << " " << m_points[0].y << " " << m_points[1].x << " " << m_points[1].y << " " << m_points[2].x << " " << m_points[2].y << " "
+        << (m_colorBorder.r / 255.f) << " " << (m_colorBorder.g / 255.f) << " " << (m_colorBorder.b / 255.f) << " "
+        << (m_color.r / 255.f) << " " << (m_color.g / 255.f) << " " << (m_color.b / 255.f);
+    return oss.str();
 }

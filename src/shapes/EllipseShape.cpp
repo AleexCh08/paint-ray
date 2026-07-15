@@ -1,4 +1,5 @@
 #include "EllipseShape.h"
+#include <sstream>
 
 EllipseShape::EllipseShape(Rectangle bounds, Color color) 
     : m_bounds(bounds), m_color(color), m_colorBorder(BLACK) 
@@ -29,7 +30,6 @@ void EllipseShape::RenderPixelByPixel() {
 
     drawEllipsePoints(x, y, m_colorBorder);
 
-    // Región 1 original
     while (b2 * (2 * x + 1) < a2 * (2 * y - 1)) {
         if (sigma >= 0) {
             sigma += fa2 * (1 - y);
@@ -40,7 +40,6 @@ void EllipseShape::RenderPixelByPixel() {
         drawEllipsePoints(x, y, m_colorBorder);
     }
 
-    // Región 2 original
     sigma = b2 * ((2 * x + 1) * (2 * x + 1)) + a2 * ((2 * y - 1) * (2 * y - 1)) - a2 * b2;
     while (y >= 0) {
         if (sigma <= 0) {
@@ -52,7 +51,6 @@ void EllipseShape::RenderPixelByPixel() {
         drawEllipsePoints(x, y, m_colorBorder);
     }
 
-    // Relleno original
     for (int iy = -b; iy <= b; iy++) {
         for (int ix = -a; ix <= a; ix++) {
             if ((ix * ix * b2 + iy * iy * a2) <= (a2 * b2)) {
@@ -104,3 +102,11 @@ Color EllipseShape::GetColor() const { return m_color; }
 void EllipseShape::SetColorBorder(Color color) { m_colorBorder = color; }
 Color EllipseShape::GetColorBorder() const { return m_colorBorder; }
 void EllipseShape::SetBounds(Rectangle bounds) { m_bounds = bounds; }
+
+std::string EllipseShape::Serialize() const {
+    std::ostringstream oss;
+    oss << "FILLED_ELLIPSE " << m_bounds.x << " " << m_bounds.y << " " << m_bounds.width << " " << m_bounds.height << " "
+        << (m_colorBorder.r / 255.f) << " " << (m_colorBorder.g / 255.f) << " " << (m_colorBorder.b / 255.f) << " "
+        << (m_color.r / 255.f) << " " << (m_color.g / 255.f) << " " << (m_color.b / 255.f);
+    return oss.str();
+}

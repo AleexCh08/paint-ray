@@ -1,6 +1,7 @@
 // src/Shape.h
 #pragma once
 #include "raylib.h"
+#include <string>
 
 enum ShapeType {
     SHAPE_NONE = -1,
@@ -35,4 +36,6 @@ public:
     
     virtual void SetColorBorder(Color color) = 0;
     virtual Color GetColorBorder() const = 0;
+
+    virtual std::string Serialize() const = 0;
 };

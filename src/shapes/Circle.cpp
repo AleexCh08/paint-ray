@@ -1,4 +1,5 @@
 #include "Circle.h"
+#include <sstream>
 
 Circle::Circle(Vector2 center, float radius, Color color) 
     : m_center(center), m_radius(radius), m_color(color), m_colorBorder(BLACK) 
@@ -13,7 +14,6 @@ void Circle::RenderPixelByPixel() {
     int y0 = (int)m_center.y;
     int radius = (int)m_radius;
 
-    // Relleno original del círculo
     for (int y = -radius; y <= radius; y++) {
         for (int x = -radius; x <= radius; x++) {
             if (x * x + y * y <= radius * radius) {
@@ -22,7 +22,6 @@ void Circle::RenderPixelByPixel() {
         }
     }
 
-    // Dibujar el borde del círculo (Algoritmo original)
     int x = radius; 
     int y = 0; 
     int err = 0;
@@ -53,7 +52,6 @@ void Circle::RenderOptimized() {
 }
 
 void Circle::DrawSelection() {
-    // Puntos de control y borde rojo de selección
     float ctrlSize = 4.0f;
     DrawCircleV({m_center.x - m_radius, m_center.y}, ctrlSize, BLUE);
     DrawCircleV({m_center.x + m_radius, m_center.y}, ctrlSize, BLUE);
@@ -69,7 +67,6 @@ void Circle::Move(Vector2 offset) {
 }
 
 bool Circle::IsPointInside(Vector2 point) {
-    // Calculo original de colisión
     float dx = point.x - m_center.x;
     float dy = point.y - m_center.y;
     return (dx * dx + dy * dy) <= (m_radius * m_radius);
@@ -80,3 +77,11 @@ Color Circle::GetColor() const { return m_color; }
 void Circle::SetColorBorder(Color color) { m_colorBorder = color; }
 Color Circle::GetColorBorder() const { return m_colorBorder; }
 void Circle::SetRadius(float radius) { m_radius = radius; }
+
+std::string Circle::Serialize() const {
+    std::ostringstream oss;
+    oss << "FILLED_CIRCLE " << m_center.x << " " << m_center.y << " " << (m_center.x + m_radius) << " " << m_center.y << " "
+        << (m_colorBorder.r / 255.f) << " " << (m_colorBorder.g / 255.f) << " " << (m_colorBorder.b / 255.f) << " "
+        << (m_color.r / 255.f) << " " << (m_color.g / 255.f) << " " << (m_color.b / 255.f);
+    return oss.str();
+}
