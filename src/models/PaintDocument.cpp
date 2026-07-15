@@ -67,6 +67,20 @@ void PaintDocument::MoveShapeToBack(Shape* shape) {
     }
 }
 
+void PaintDocument::MoveShapeForward(Shape* shape) {
+    auto it = std::find(m_shapes.begin(), m_shapes.end(), shape);
+    if (it != m_shapes.end() && it != m_shapes.end() - 1) {
+        std::iter_swap(it, it + 1);
+    }
+}
+
+void PaintDocument::MoveShapeBackward(Shape* shape) {
+    auto it = std::find(m_shapes.begin(), m_shapes.end(), shape);
+    if (it != m_shapes.end() && it != m_shapes.begin()) {
+        std::iter_swap(it, it - 1);
+    }
+}
+
 void PaintDocument::SetContextMenuState(bool open, Vector2 pos) {
     m_showContextMenu = open;
     m_contextMenuPos = pos;

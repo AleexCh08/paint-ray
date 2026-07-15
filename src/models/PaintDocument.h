@@ -44,6 +44,8 @@ public:
 
     void MoveShapeToFront(Shape* shape);
     void MoveShapeToBack(Shape* shape);
+    void MoveShapeForward(Shape* shape);
+    void MoveShapeBackward(Shape* shape);
     void SetContextMenuState(bool open, Vector2 pos = {0, 0});
     bool IsContextMenuOpen() const;
     Vector2 GetContextMenuPos() const;

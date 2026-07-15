@@ -106,14 +106,22 @@ void PaintView::Render() {
     if (m_document->IsContextMenuOpen()) {
         Vector2 pos = m_document->GetContextMenuPos();
         
-        DrawRectangle((int)pos.x, (int)pos.y, 140, 70, Color{ 45, 45, 45, 255 });
-        DrawRectangleLines((int)pos.x, (int)pos.y, 140, 70, LIGHTGRAY);
+        DrawRectangle((int)pos.x, (int)pos.y, 140, 122, Color{ 45, 45, 45, 255 });
+        DrawRectangleLines((int)pos.x, (int)pos.y, 140, 122, LIGHTGRAY);
 
         if (GuiButton({ pos.x + 5, pos.y + 10, 130, 24 }, "Traer al frente")) {
             m_document->MoveShapeToFront(m_document->GetSelectedShape());
             m_document->SetContextMenuState(false);
         }
-        if (GuiButton({ pos.x + 5, pos.y + 36, 130, 24 }, "Enviar al fondo")) {
+        if (GuiButton({ pos.x + 5, pos.y + 36, 130, 24 }, "Avanzar nivel")) {
+            m_document->MoveShapeForward(m_document->GetSelectedShape());
+            m_document->SetContextMenuState(false);
+        }
+        if (GuiButton({ pos.x + 5, pos.y + 62, 130, 24 }, "Retroceder nivel")) {
+            m_document->MoveShapeBackward(m_document->GetSelectedShape());
+            m_document->SetContextMenuState(false);
+        }
+        if (GuiButton({ pos.x + 5, pos.y + 88, 130, 24 }, "Enviar al fondo")) {
             m_document->MoveShapeToBack(m_document->GetSelectedShape());
             m_document->SetContextMenuState(false);
         }
