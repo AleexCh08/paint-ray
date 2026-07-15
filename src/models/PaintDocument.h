@@ -9,7 +9,9 @@ private:
     
     DrawingMode m_currentMode;
     ShapeType m_currentTool;
-    Color m_currentColor;
+    Color m_currentFillColor;
+    Color m_currentBorderColor;
+    bool m_editBorderMode;
 
 public:
     PaintDocument();
@@ -32,6 +34,12 @@ public:
     void SetCurrentTool(ShapeType tool);
     ShapeType GetCurrentTool() const;
 
-    void SetCurrentColor(Color color);
-    Color GetCurrentColor() const;
+    void SetCurrentFillColor(Color color);
+    Color GetCurrentFillColor() const;
+
+    void SetCurrentBorderColor(Color color);
+    Color GetCurrentBorderColor() const;
+
+    void SetEditBorderMode(bool editBorder);
+    bool IsEditBorderMode() const;
 };

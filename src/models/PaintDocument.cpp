@@ -5,7 +5,9 @@ PaintDocument::PaintDocument() {
     m_selectedShape = nullptr;
     m_currentMode = MODE_OPTIMIZED;
     m_currentTool = SHAPE_NONE;
-    m_currentColor = WHITE;
+    m_currentFillColor = WHITE;     
+    m_currentBorderColor = BLACK;   
+    m_editBorderMode = false;
 }
 
 PaintDocument::~PaintDocument() {
@@ -40,5 +42,9 @@ void PaintDocument::SetDrawingMode(DrawingMode mode) { m_currentMode = mode; }
 DrawingMode PaintDocument::GetDrawingMode() const { return m_currentMode; }
 void PaintDocument::SetCurrentTool(ShapeType tool) { m_currentTool = tool; }
 ShapeType PaintDocument::GetCurrentTool() const { return m_currentTool; }
-void PaintDocument::SetCurrentColor(Color color) { m_currentColor = color; }
-Color PaintDocument::GetCurrentColor() const { return m_currentColor; }
+void PaintDocument::SetCurrentFillColor(Color color) { m_currentFillColor = color; }
+Color PaintDocument::GetCurrentFillColor() const { return m_currentFillColor; }
+void PaintDocument::SetCurrentBorderColor(Color color) { m_currentBorderColor = color; }
+Color PaintDocument::GetCurrentBorderColor() const { return m_currentBorderColor; }
+void PaintDocument::SetEditBorderMode(bool editBorder) { m_editBorderMode = editBorder; }
+bool PaintDocument::IsEditBorderMode() const { return m_editBorderMode; }

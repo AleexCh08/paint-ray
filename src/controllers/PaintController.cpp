@@ -61,19 +61,22 @@ void PaintController::HandleMouseDown(Vector2 mousePos) {
     if (m_document->GetCurrentTool() == SHAPE_NONE) return;
 
     m_isDrawing = true;
-    Color color = m_document->GetCurrentColor();
-    bool isDefaultWhite = (color.r == 255 && color.g == 255 && color.b == 255 && color.a == 255);
-    Color strokeColor = isDefaultWhite ? BLACK : color;
-
     Shape* newShape = nullptr;
+    Color fillColor = m_document->GetCurrentFillColor();
+    Color borderColor = m_document->GetCurrentBorderColor();
+
     switch (m_document->GetCurrentTool()) {
-        case SHAPE_LINE:      newShape = new Line(mousePos, mousePos, strokeColor); break;
-        case SHAPE_CIRCLE:    newShape = new Circle(mousePos, 0, color); break;
-        case SHAPE_RECTANGLE: newShape = new RectangleShape({mousePos.x, mousePos.y, 0, 0}, color); break;
-        case SHAPE_ELLIPSE:   newShape = new EllipseShape({mousePos.x, mousePos.y, 0, 0}, color); break;
-        case SHAPE_TRIANGLE:  newShape = new Triangle(mousePos, mousePos, mousePos, color); break;
-        case SHAPE_BEZIER:    newShape = new BezierCurve(mousePos, mousePos, strokeColor); break;
+        case SHAPE_LINE:      newShape = new Line(mousePos, mousePos, borderColor); break;
+        case SHAPE_BEZIER:    newShape = new BezierCurve(mousePos, mousePos, borderColor); break;
+        case SHAPE_CIRCLE:    newShape = new Circle(mousePos, 0, fillColor); break;
+        case SHAPE_RECTANGLE: newShape = new RectangleShape({mousePos.x, mousePos.y, 0, 0}, fillColor); break;
+        case SHAPE_ELLIPSE:   newShape = new EllipseShape({mousePos.x, mousePos.y, 0, 0}, fillColor); break;
+        case SHAPE_TRIANGLE:  newShape = new Triangle(mousePos, mousePos, mousePos, fillColor); break;
         default: break;
+    }
+
+    if (newShape && m_document->GetCurrentTool() != SHAPE_LINE && m_document->GetCurrentTool() != SHAPE_BEZIER) {
+        newShape->SetColorBorder(borderColor);
     }
 
     if (newShape) {

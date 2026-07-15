@@ -2,25 +2,26 @@
 #include "../raygui.h"
 
 PaintView::PaintView(PaintDocument* document) : m_document(document) {
-    // Forzar Modo Oscuro Profesional alterando los estilos base de Raygui
-    GuiSetStyle(DEFAULT, BASE_COLOR_NORMAL, 0x2b2b2bff);
-    GuiSetStyle(DEFAULT, BASE_COLOR_FOCUSED, 0x4a4a4aff);
-    GuiSetStyle(DEFAULT, BASE_COLOR_PRESSED, 0x8a8a8aff);
-    GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, 0x1f1f1fff);
-    GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, 0xffffffff);
+
+    GuiSetStyle(DEFAULT, TEXT_SIZE, 10); 
+    GuiSetStyle(DEFAULT, BASE_COLOR_NORMAL, 0x333333ff);
+    GuiSetStyle(DEFAULT, BASE_COLOR_FOCUSED, 0x5a5a5aff);
+    GuiSetStyle(DEFAULT, BASE_COLOR_PRESSED, 0x1a1a1aff);
+    
+    GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, 0x666666ff);
+    GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, 0xffffffff); 
     GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, 0xffffffff);
-    GuiSetStyle(DEFAULT, TEXT_COLOR_PRESSED, 0xffffffff);
+    GuiSetStyle(DEFAULT, TEXT_COLOR_PRESSED, 0xbbbbbbff); 
+    
+    GuiSetStyle(BUTTON, BORDER_WIDTH, 1);
 }
 
 void PaintView::Render() {
     BeginDrawing();
     ClearBackground(Color{ 35, 35, 35, 255 }); 
 
-    // --- 1. LIENZO DINÁMICO (CANVAS) ---
-    // Calculado dinámicamente para llenar el centro de la pantalla
     Rectangle canvas = { 280, 60, (float)GetScreenWidth() - 400, (float)GetScreenHeight() - 80 };
     
-    // Gris muy suave en lugar de blanco hiriente para no encandilar
     DrawRectangleRec(canvas, Color{ 210, 210, 210, 255 }); 
     DrawRectangleLinesEx(canvas, 2.0f, BLACK); 
 
@@ -32,34 +33,35 @@ void PaintView::Render() {
     }
     EndScissorMode();
 
-    // --- 2. PANEL IZQUIERDO (Colores) ---
     DrawRectangle(0, 40, 260, GetScreenHeight() - 40, Color{ 45, 45, 45, 255 });
-    GuiLabel({ 20, 50, 100, 20 }, "PALETA DE COLORES");
-    
-    Color palette[] = { 
-        BLACK, DARKGRAY, GRAY, LIGHTGRAY, WHITE,
-        RED, MAROON, ORANGE, GOLD, YELLOW,
-        LIME, GREEN, DARKGREEN, SKYBLUE, BLUE,
-        DARKBLUE, PURPLE, VIOLET, PINK, MAGENTA
-    };
-    
-    int cols = 5;
-    for(int i = 0; i < 20; i++) {
-        int col = i % cols;
-        int row = i / cols;
-        Rectangle btnRect = { 20.0f + col * 42.0f, 80.0f + row * 42.0f, 35.0f, 35.0f };
-        
-        if (m_document->GetCurrentColor().r == palette[i].r && 
-            m_document->GetCurrentColor().g == palette[i].g && 
-            m_document->GetCurrentColor().b == palette[i].b) {
-            DrawRectangleRec({btnRect.x - 3, btnRect.y - 3, btnRect.width + 6, btnRect.height + 6}, LIGHTGRAY);
-        }
+    GuiLabel({ 20, 50, 220, 20 }, "PROPIEDADES DE COLOR");
 
-        if (GuiButton(btnRect, "")) m_document->SetCurrentColor(palette[i]);
-        DrawRectangleRec({btnRect.x + 2, btnRect.y + 2, btnRect.width - 4, btnRect.height - 4}, palette[i]);
+    bool editBorder = m_document->IsEditBorderMode();
+    Color activeColor = editBorder ? m_document->GetCurrentBorderColor() : m_document->GetCurrentFillColor();
+    GuiColorPicker({ 20, 80, 160, 160 }, nullptr, &activeColor);
+
+    if (editBorder) {
+        m_document->SetCurrentBorderColor(activeColor);
+    } else {
+        m_document->SetCurrentFillColor(activeColor);
     }
 
-    // --- 3. PANEL DERECHO DINÁMICO (Herramientas) ---
+    Rectangle rectFill = { 20, 260, 100, 45 };
+    Rectangle rectBorder = { 130, 260, 100, 45 };
+
+    if (!editBorder) DrawRectangleRec({rectFill.x - 2, rectFill.y - 2, rectFill.width + 4, rectFill.height + 4}, SKYBLUE);
+    if (editBorder) DrawRectangleRec({rectBorder.x - 2, rectBorder.y - 2, rectBorder.width + 4, rectBorder.height + 4}, SKYBLUE);
+    
+    if (GuiButton(rectFill, "")) m_document->SetEditBorderMode(false);
+    if (GuiButton(rectBorder, "")) m_document->SetEditBorderMode(true);
+    DrawText("Relleno", (int)rectFill.x + 28, (int)rectFill.y + 8, 10, WHITE);
+    DrawText("Contorno", (int)rectBorder.x + 24, (int)rectBorder.y + 8, 10, WHITE);
+
+    DrawRectangle((int)rectFill.x + 10, (int)rectFill.y + 24, 80, 14, m_document->GetCurrentFillColor());
+    DrawRectangleLines((int)rectFill.x + 10, (int)rectFill.y + 24, 80, 14, LIGHTGRAY);
+    DrawRectangle((int)rectBorder.x + 10, (int)rectBorder.y + 24, 80, 14, m_document->GetCurrentBorderColor());
+    DrawRectangleLines((int)rectBorder.x + 10, (int)rectBorder.y + 24, 80, 14, LIGHTGRAY);
+
     float rightPanelX = (float)GetScreenWidth() - 100.0f;
     DrawRectangle(rightPanelX, 40, 100, GetScreenHeight() - 40, Color{ 45, 45, 45, 255 });
     
@@ -87,7 +89,6 @@ void PaintView::Render() {
         }
     }
 
-    // --- 4. BARRA SUPERIOR GLOBALES ---
     DrawRectangle(0, 0, GetScreenWidth(), 40, Color{ 25, 25, 25, 255 });
     
     if (GuiButton({ 10, 8, 120, 24 }, "Limpiar Lienzo")) m_document->ClearAll();
