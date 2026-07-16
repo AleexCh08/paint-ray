@@ -33,6 +33,7 @@ void PaintView::Render() {
     Color hoverColor = { 60, 60, 65, 255 };
 
     Vector2 mousePos = GetMousePosition();
+    const char* activeTooltip = nullptr;
 
     // --- 1. LIENZO CENTRAL (ARTBOARD) ---
     Rectangle canvas = { leftPanelW + 20, topBarH + 20, (float)GetScreenWidth() - leftPanelW - rightPanelW - 40, (float)GetScreenHeight() - topBarH - 40 };
@@ -65,6 +66,8 @@ void PaintView::Render() {
         // Interfaz programada a mano (Sin GuiButton)
         if (isActive) DrawRectangleRounded(btnRect, 0.2f, 4, accentColor);
         else if (isHovered) DrawRectangleRounded(btnRect, 0.2f, 4, hoverColor);
+        const char* toolTooltips[8] = {"Seleccionar / Mover", "Borrar Figura", "Línea", "Círculo", "Elipse", "Rectángulo", "Triángulo", "Curva Bezier"};
+        if (isHovered) activeTooltip = toolTooltips[i];
 
         // Lógica de clics pura
         if (isHovered && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
@@ -147,6 +150,9 @@ void PaintView::Render() {
             DrawTextEx(m_font, tabNames[i], { tabRect.x + 12, tabRect.y + 7 }, 14, 1, Color{ 170, 170, 175, 255 });
             if (isTabHovered && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) m_document->SetColorEditMode(i);
         }
+        
+        const char* tabTooltips[3] = {"Color de Relleno", "Color de Contorno", "Color de Fondo del Lienzo"};
+        if (isTabHovered) activeTooltip = tabTooltips[i];
     }
 
     Color activeColor;
@@ -189,7 +195,10 @@ void PaintView::Render() {
             Rectangle btnRect = { 240.0f, 7.0f, 100.0f, 30.0f };
             bool isHovered = CheckCollisionPointRec(mousePos, btnRect);
             
-            if (isHovered) DrawRectangleRounded(btnRect, 0.2f, 4, hoverColor);
+            if (isHovered) {
+                DrawRectangleRounded(btnRect, 0.2f, 4, hoverColor);
+                activeTooltip = "Cambiar motor de renderizado";
+            }
             DrawTextEx(m_font, text, { btnRect.x + 10, btnRect.y + 7 }, 14, 1, isHovered ? WHITE : LIGHTGRAY);
             
             if (isHovered && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
@@ -199,7 +208,11 @@ void PaintView::Render() {
             Rectangle btnRect = { 10.0f + (i * 75), 7.0f, 70.0f, 30.0f };
             bool isHovered = CheckCollisionPointRec(mousePos, btnRect);
             
-            if (isHovered) DrawRectangleRounded(btnRect, 0.2f, 4, hoverColor);
+            if (isHovered) {
+                DrawRectangleRounded(btnRect, 0.2f, 4, hoverColor);
+                const char* topTooltips[3] = {"Limpiar todo el lienzo", "Guardar archivo (.rpnt)", "Cargar archivo (.rpnt)"};
+                activeTooltip = topTooltips[i];
+            }
             DrawTextEx(m_font, topBtns[i], { btnRect.x + 12, btnRect.y + 7 }, 14, 1, isHovered ? WHITE : LIGHTGRAY);
             
             if (isHovered && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
@@ -245,5 +258,19 @@ void PaintView::Render() {
         }
         DrawLine((int)pos.x + 10, (int)pos.y + 130, (int)pos.x + 140, (int)pos.y + 130, Color{ 60, 60, 65, 255 });
     }
+
+    // --- 6. DIBUJAR TOOLTIP (Siempre por encima de todo) ---
+    if (activeTooltip != nullptr && !m_document->IsContextMenuOpen()) {
+        Vector2 tSize = MeasureTextEx(m_font, activeTooltip, 14, 1);
+        Rectangle tRect = { mousePos.x + 15, mousePos.y + 15, tSize.x + 16, tSize.y + 10 };
+        
+        if (tRect.x + tRect.width > GetScreenWidth()) tRect.x = GetScreenWidth() - tRect.width - 5;
+        if (tRect.y + tRect.height > GetScreenHeight()) tRect.y = GetScreenHeight() - tRect.height - 5;
+
+        DrawRectangleRounded(tRect, 0.2f, 4, Color{ 20, 20, 25, 230 });
+        DrawRectangleLinesEx(tRect, 1.0f, Color{ 80, 80, 85, 255 });
+        DrawTextEx(m_font, activeTooltip, { tRect.x + 8, tRect.y + 5 }, 14, 1, WHITE);
+    }
+
     EndDrawing();
 }
