@@ -16,7 +16,7 @@ PaintDocument::PaintDocument() {
     m_currentTool = SHAPE_NONE;
     m_currentFillColor = WHITE;     
     m_currentBorderColor = BLACK;   
-    m_editBorderMode = false;
+    m_colorEditMode = 0;
     m_showContextMenu = false;
     m_contextMenuPos = {0, 0};
     m_bgColor = { 210, 210, 210, 255 };
@@ -58,8 +58,9 @@ void PaintDocument::SetCurrentFillColor(Color color) { m_currentFillColor = colo
 Color PaintDocument::GetCurrentFillColor() const { return m_currentFillColor; }
 void PaintDocument::SetCurrentBorderColor(Color color) { m_currentBorderColor = color; }
 Color PaintDocument::GetCurrentBorderColor() const { return m_currentBorderColor; }
-void PaintDocument::SetEditBorderMode(bool editBorder) { m_editBorderMode = editBorder; }
-bool PaintDocument::IsEditBorderMode() const { return m_editBorderMode; }
+void PaintDocument::SetColorEditMode(int mode) { m_colorEditMode = mode; }
+int PaintDocument::GetColorEditMode() const { return m_colorEditMode; }
+void PaintDocument::SetBackgroundColor(Color color) { m_bgColor = color; }
 
 void PaintDocument::MoveShapeToFront(Shape* shape) {
     auto it = std::find(m_shapes.begin(), m_shapes.end(), shape);

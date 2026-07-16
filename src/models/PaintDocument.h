@@ -11,7 +11,7 @@ private:
     ShapeType m_currentTool;
     Color m_currentFillColor;
     Color m_currentBorderColor;
-    bool m_editBorderMode;
+    int m_colorEditMode;
     bool m_showContextMenu;
     Vector2 m_contextMenuPos;
     Color m_bgColor;
@@ -40,8 +40,9 @@ public:
     void SetCurrentBorderColor(Color color);
     Color GetCurrentBorderColor() const;
 
-    void SetEditBorderMode(bool editBorder);
-    bool IsEditBorderMode() const;
+    void SetColorEditMode(int mode);
+    int GetColorEditMode() const;
+    void SetBackgroundColor(Color color);
 
     void MoveShapeToFront(Shape* shape);
     void MoveShapeToBack(Shape* shape);

@@ -35,31 +35,43 @@ void PaintView::Render() {
     DrawRectangle(0, 40, 260, GetScreenHeight() - 40, Color{ 45, 45, 45, 255 });
     GuiLabel({ 20, 50, 220, 20 }, "PROPIEDADES DE COLOR");
 
-    bool editBorder = m_document->IsEditBorderMode();
-    Color activeColor = editBorder ? m_document->GetCurrentBorderColor() : m_document->GetCurrentFillColor();
+    int editMode = m_document->GetColorEditMode();
+    Color activeColor;
+    
+    if (editMode == 0) activeColor = m_document->GetCurrentFillColor();
+    else if (editMode == 1) activeColor = m_document->GetCurrentBorderColor();
+    else activeColor = m_document->GetBackgroundColor();
+
     GuiColorPicker({ 20, 80, 160, 160 }, nullptr, &activeColor);
 
-    if (editBorder) {
-        m_document->SetCurrentBorderColor(activeColor);
-    } else {
-        m_document->SetCurrentFillColor(activeColor);
-    }
+    if (editMode == 0) m_document->SetCurrentFillColor(activeColor);
+    else if (editMode == 1) m_document->SetCurrentBorderColor(activeColor);
+    else m_document->SetBackgroundColor(activeColor);
 
-    Rectangle rectFill = { 20, 260, 100, 45 };
-    Rectangle rectBorder = { 130, 260, 100, 45 };
+    Rectangle rectFill =   { 20, 260, 70, 45 };
+    Rectangle rectBorder = { 95, 260, 70, 45 };
+    Rectangle rectBg =     { 170, 260, 70, 45 };
 
-    if (!editBorder) DrawRectangleRec({rectFill.x - 2, rectFill.y - 2, rectFill.width + 4, rectFill.height + 4}, SKYBLUE);
-    if (editBorder) DrawRectangleRec({rectBorder.x - 2, rectBorder.y - 2, rectBorder.width + 4, rectBorder.height + 4}, SKYBLUE);
+    if (editMode == 0) DrawRectangleRec({rectFill.x - 2, rectFill.y - 2, rectFill.width + 4, rectFill.height + 4}, SKYBLUE);
+    else if (editMode == 1) DrawRectangleRec({rectBorder.x - 2, rectBorder.y - 2, rectBorder.width + 4, rectBorder.height + 4}, SKYBLUE);
+    else if (editMode == 2) DrawRectangleRec({rectBg.x - 2, rectBg.y - 2, rectBg.width + 4, rectBg.height + 4}, SKYBLUE);
     
-    if (GuiButton(rectFill, "")) m_document->SetEditBorderMode(false);
-    if (GuiButton(rectBorder, "")) m_document->SetEditBorderMode(true);
-    DrawText("Relleno", (int)rectFill.x + 28, (int)rectFill.y + 8, 10, WHITE);
-    DrawText("Contorno", (int)rectBorder.x + 24, (int)rectBorder.y + 8, 10, WHITE);
+    if (GuiButton(rectFill, "")) m_document->SetColorEditMode(0);
+    if (GuiButton(rectBorder, "")) m_document->SetColorEditMode(1);
+    if (GuiButton(rectBg, "")) m_document->SetColorEditMode(2);
 
-    DrawRectangle((int)rectFill.x + 10, (int)rectFill.y + 24, 80, 14, m_document->GetCurrentFillColor());
-    DrawRectangleLines((int)rectFill.x + 10, (int)rectFill.y + 24, 80, 14, LIGHTGRAY);
-    DrawRectangle((int)rectBorder.x + 10, (int)rectBorder.y + 24, 80, 14, m_document->GetCurrentBorderColor());
-    DrawRectangleLines((int)rectBorder.x + 10, (int)rectBorder.y + 24, 80, 14, LIGHTGRAY);
+    DrawText("Relleno", (int)rectFill.x + 16, (int)rectFill.y + 8, 10, WHITE);
+    DrawText("Contorno", (int)rectBorder.x + 13, (int)rectBorder.y + 8, 10, WHITE);
+    DrawText("Fondo", (int)rectBg.x + 22, (int)rectBg.y + 8, 10, WHITE);
+
+    DrawRectangle((int)rectFill.x + 10, (int)rectFill.y + 24, 50, 14, m_document->GetCurrentFillColor());
+    DrawRectangleLines((int)rectFill.x + 10, (int)rectFill.y + 24, 50, 14, LIGHTGRAY);
+
+    DrawRectangle((int)rectBorder.x + 10, (int)rectBorder.y + 24, 50, 14, m_document->GetCurrentBorderColor());
+    DrawRectangleLines((int)rectBorder.x + 10, (int)rectBorder.y + 24, 50, 14, LIGHTGRAY);
+
+    DrawRectangle((int)rectBg.x + 10, (int)rectBg.y + 24, 50, 14, m_document->GetBackgroundColor());
+    DrawRectangleLines((int)rectBg.x + 10, (int)rectBg.y + 24, 50, 14, LIGHTGRAY);
 
     float rightPanelX = (float)GetScreenWidth() - 100.0f;
     DrawRectangle(rightPanelX, 40, 100, GetScreenHeight() - 40, Color{ 45, 45, 45, 255 });
