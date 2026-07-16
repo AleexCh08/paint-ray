@@ -8,6 +8,13 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_MAXIMIZED | FLAG_WINDOW_RESIZABLE);
     InitWindow(1440, 900, "Paint Ray");
     MaximizeWindow();
+
+    Image logo = LoadImage("../assets/logo.png"); 
+    if (logo.data != NULL) {
+        SetWindowIcon(logo); 
+        UnloadImage(logo);   
+    }
+
     SetTargetFPS(60);
 
     PaintDocument model;
