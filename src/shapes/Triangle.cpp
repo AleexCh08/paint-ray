@@ -63,8 +63,18 @@ void Triangle::RenderPixelByPixel() {
 }
 
 void Triangle::RenderOptimized() {
-    DrawTriangle(m_points[0], m_points[1], m_points[2], m_color);
-    DrawTriangleLines(m_points[0], m_points[1], m_points[2], m_colorBorder);
+    float cross = (m_points[1].x - m_points[0].x) * (m_points[2].y - m_points[0].y) - 
+                  (m_points[1].y - m_points[0].y) * (m_points[2].x - m_points[0].x);
+
+    if (cross < 0) {
+        DrawTriangle(m_points[0], m_points[1], m_points[2], m_color);
+    } else {
+        DrawTriangle(m_points[0], m_points[2], m_points[1], m_color);
+    }
+
+    DrawLineV(m_points[0], m_points[1], m_colorBorder);
+    DrawLineV(m_points[1], m_points[2], m_colorBorder);
+    DrawLineV(m_points[2], m_points[0], m_colorBorder);
 }
 
 void Triangle::DrawSelection() {
