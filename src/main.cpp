@@ -9,7 +9,7 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_MAXIMIZED | FLAG_WINDOW_RESIZABLE);   
     const int screenWidth = 1440;
     const int screenHeight = 900;  
-    InitWindow(screenWidth, screenHeight, "RaylibPaint");
+    InitWindow(screenWidth, screenHeight, "PaintRay");
     MaximizeWindow();
 
     Image logo = LoadImage("../assets/logo.png");
