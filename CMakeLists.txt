@@ -38,7 +38,8 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS}
     src/views/PaintView.cpp
     src/controllers/PaintController.h
     src/controllers/PaintController.cpp
-    src/tinyfiledialogs.c)
+    src/tinyfiledialogs.c
+    src/core/SplashScreen.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 if(MINGW)
     target_link_options(${PROJECT_NAME} PRIVATE "-mconsole")
