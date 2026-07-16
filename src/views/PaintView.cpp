@@ -87,8 +87,11 @@ void PaintView::Render() {
                 DrawLineEx({center.x - 2, center.y + 4}, {center.x + 4, center.y + 14}, 2.5f, iconColor);
                 break;
             case 1: 
-                DrawRectangleLinesEx({center.x - 10, center.y - 8, 20, 16}, 2.0f, Color{ 220, 80, 80, 255 });
-                DrawLineEx({center.x, center.y - 8}, {center.x, center.y + 8}, 2.0f, Color{ 220, 80, 80, 255 });
+                DrawRectangleRec({center.x - 8, center.y - 10, 16, 2}, Color{ 220, 80, 80, 255 });
+                DrawRectangleRec({center.x - 3, center.y - 13, 6, 3}, Color{ 220, 80, 80, 255 });
+                DrawRectangleLinesEx({center.x - 6, center.y - 8, 12, 18}, 2.0f, Color{ 220, 80, 80, 255 });
+                DrawLineEx({center.x - 2, center.y - 4}, {center.x - 2, center.y + 6}, 2.0f, Color{ 220, 80, 80, 255 });
+                DrawLineEx({center.x + 2, center.y - 4}, {center.x + 2, center.y + 6}, 2.0f, Color{ 220, 80, 80, 255 });
                 break;
             case 2: 
                 DrawLineEx({center.x - 10, center.y + 10}, {center.x + 10, center.y - 10}, 2.0f, iconColor); 
@@ -151,7 +154,7 @@ void PaintView::Render() {
     else activeColor = m_document->GetBackgroundColor();
 
     // El Color Picker se mantiene por utilidad, pero estilizado
-    GuiColorPicker({ rightPanelX + 20, topBarH + 110, 240, 200 }, nullptr, &activeColor);
+    GuiColorPicker({ rightPanelX + 20, topBarH + 110, 190, 190 }, nullptr, &activeColor);
 
     if (editMode == 0) m_document->SetCurrentFillColor(activeColor);
     else if (editMode == 1) m_document->SetCurrentBorderColor(activeColor);
