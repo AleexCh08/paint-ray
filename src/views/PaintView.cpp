@@ -1,5 +1,7 @@
 #include "PaintView.h"
 #include "../raygui.h"
+#include "../tinyfiledialogs.h"
+#include <filesystem>
 
 PaintView::PaintView(PaintDocument* document) : m_document(document) {
     m_font = LoadFontEx("../assets/Roboto-Regular.ttf", 32, 0, 250);
@@ -216,9 +218,35 @@ void PaintView::Render() {
             DrawTextEx(m_font, topBtns[i], { btnRect.x + 12, btnRect.y + 7 }, 14, 1, isHovered ? WHITE : LIGHTGRAY);
             
             if (isHovered && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-                if (i == 0) m_document->ClearAll();
-                if (i == 1) m_document->SaveToFile("dibujo.rpnt");
-                if (i == 2) m_document->LoadFromFile("dibujo.rpnt");
+                if (i == 0) {
+                    m_document->ClearAll();
+                }
+
+                if (i == 1 || i == 2) {
+                    std::string drawsDir = TextFormat("%sdraws", GetApplicationDirectory());
+                    if (!std::filesystem::exists(drawsDir)) {
+                        std::filesystem::create_directory(drawsDir);
+                    }
+                }
+
+                if (i == 1) {
+                    const char* filters[1] = { "*.rpnt" };
+                    const char* defaultPath = TextFormat("%sdraws/dibujo.rpnt", GetApplicationDirectory());
+                    
+                    const char* savePath = tinyfd_saveFileDialog("Guardar Dibujo", defaultPath, 1, filters, "Archivo Raylib Paint (.rpnt)");
+                    if (savePath != nullptr) {
+                        m_document->SaveToFile(savePath);
+                    }
+                }
+                if (i == 2) {
+                    const char* filters[1] = { "*.rpnt" };
+                    const char* defaultPath = TextFormat("%sdraws/", GetApplicationDirectory());
+                    
+                    const char* loadPath = tinyfd_openFileDialog("Cargar Dibujo", defaultPath, 1, filters, "Archivo Raylib Paint (.rpnt)", 0);
+                    if (loadPath != nullptr) {
+                        m_document->LoadFromFile(loadPath);
+                    }
+                }
             }
         }
     }
