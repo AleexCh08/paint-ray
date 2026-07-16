@@ -2,8 +2,9 @@
 #include "../raygui.h"
 
 PaintView::PaintView(PaintDocument* document) : m_document(document) {
-    m_font = LoadFontEx("../assets/Roboto-Regular.ttf", 20, 0, 250);
+    m_font = LoadFontEx("../assets/Roboto-Regular.ttf", 32, 0, 250);
     if (m_font.texture.id != 0) {
+        SetTextureFilter(m_font.texture, TEXTURE_FILTER_BILINEAR);
         GuiSetFont(m_font);
         GuiSetStyle(DEFAULT, TEXT_SIZE, 14);
     }
@@ -161,15 +162,20 @@ void PaintView::Render() {
     else m_document->SetBackgroundColor(activeColor);
 
     // Indicadores Visuales Limpios
-    DrawTextEx(m_font, "Colores Activos:", { rightPanelX + 20, topBarH + 340 }, 14, 1, LIGHTGRAY);
-    DrawRectangleRounded({ rightPanelX + 20, topBarH + 370, 30, 30 }, 0.2f, 4, m_document->GetCurrentFillColor());
-    DrawRectangleLinesEx({ rightPanelX + 20, topBarH + 370, 30, 30 }, 1.0f, WHITE);
+    const char* activeColorsText = "Colores Activos:";
+    Vector2 textSize = MeasureTextEx(m_font, activeColorsText, 14, 1);
+    float textX = rightPanelX + (rightPanelW / 2.0f) - (textSize.x / 2.0f);
+    DrawTextEx(m_font, activeColorsText, { textX, topBarH + 320 }, 14, 1, LIGHTGRAY);
+    float startX = rightPanelX + 80.0f;
     
-    DrawRectangleRounded({ rightPanelX + 65, topBarH + 370, 30, 30 }, 0.2f, 4, m_document->GetCurrentBorderColor());
-    DrawRectangleLinesEx({ rightPanelX + 65, topBarH + 370, 30, 30 }, 1.0f, WHITE);
+    DrawRectangleRounded({ startX, topBarH + 350, 30, 30 }, 0.2f, 4, m_document->GetCurrentFillColor());
+    DrawRectangleLinesEx({ startX, topBarH + 350, 30, 30 }, 1.0f, WHITE);
     
-    DrawRectangleRounded({ rightPanelX + 110, topBarH + 370, 30, 30 }, 0.2f, 4, m_document->GetBackgroundColor());
-    DrawRectangleLinesEx({ rightPanelX + 110, topBarH + 370, 30, 30 }, 1.0f, WHITE);
+    DrawRectangleRounded({ startX + 45, topBarH + 350, 30, 30 }, 0.2f, 4, m_document->GetCurrentBorderColor());
+    DrawRectangleLinesEx({ startX + 45, topBarH + 350, 30, 30 }, 1.0f, WHITE);
+    
+    DrawRectangleRounded({ startX + 90, topBarH + 350, 30, 30 }, 0.2f, 4, m_document->GetBackgroundColor());
+    DrawRectangleLinesEx({ startX + 90, topBarH + 350, 30, 30 }, 1.0f, WHITE);
 
     // --- 4. BARRA SUPERIOR (GLOBALES) ---
     DrawRectangle(0, 0, GetScreenWidth(), topBarH, Color{ 45, 45, 48, 255 }); 
