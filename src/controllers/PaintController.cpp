@@ -17,7 +17,7 @@ void PaintController::Update() {
     }
 
     Vector2 mousePos = GetMousePosition();
-    Rectangle canvas = { 280, 60, (float)GetScreenWidth() - 400, (float)GetScreenHeight() - 80 };
+    Rectangle canvas = { 84, 65, (float)GetScreenWidth() - 384, (float)GetScreenHeight() - 85 };
     bool isInsideCanvas = CheckCollisionPointRec(mousePos, canvas);
 
     bool isInsideContextMenu = false;
