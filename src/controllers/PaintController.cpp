@@ -27,6 +27,23 @@ void PaintController::Update() {
         isInsideContextMenu = CheckCollisionPointRec(mousePos, menuRect);
     }
 
+    int cursorToSet = MOUSE_CURSOR_DEFAULT;
+    if (isInsideCanvas && !isInsideContextMenu) {
+        if (m_isDrawing || m_isDraggingPoint) {
+            cursorToSet = MOUSE_CURSOR_CROSSHAIR; 
+        } else if (m_isMovingShape) {
+            cursorToSet = MOUSE_CURSOR_POINTING_HAND; 
+        } else {
+            Shape* hoveredShape = GetShapeAtPoint(mousePos);
+            if (m_document->GetCurrentTool() != SHAPE_NONE) {
+                cursorToSet = MOUSE_CURSOR_CROSSHAIR; 
+            } else if (hoveredShape) {
+                cursorToSet = MOUSE_CURSOR_POINTING_HAND; 
+            }
+        }
+    }
+    SetMouseCursor(cursorToSet);
+
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && isInsideCanvas) {
         Shape* clickedShape = GetShapeAtPoint(mousePos);
         if (clickedShape) {
