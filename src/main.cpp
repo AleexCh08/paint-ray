@@ -7,6 +7,7 @@
 int main() {
     SetConfigFlags(FLAG_WINDOW_MAXIMIZED | FLAG_WINDOW_RESIZABLE);
     InitWindow(1440, 900, "Paint Ray");
+    MaximizeWindow();
     SetTargetFPS(60);
 
     PaintDocument model;
