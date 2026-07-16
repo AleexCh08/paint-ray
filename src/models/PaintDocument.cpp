@@ -44,6 +44,7 @@ void PaintDocument::ClearAll() {
         delete shape;
     }
     m_shapes.clear();
+    m_bgColor = { 210, 210, 210, 255 };
     m_selectedShape = nullptr;
 }
 
