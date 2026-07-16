@@ -7,6 +7,7 @@ private:
     float m_radius;
     Color m_color;
     Color m_colorBorder;
+    int m_draggingControlPoint = -1;
 
 public:
     Circle(Vector2 center, float radius, Color color);
@@ -27,4 +28,8 @@ public:
 
     void SetRadius(float radius);
     std::string Serialize() const override;
+
+    bool TryGrabControlPoint(Vector2 point) override;
+    void DragControlPoint(Vector2 point) override;
+    void StopDragging() override;
 };

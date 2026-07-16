@@ -1,5 +1,6 @@
 #include "Circle.h"
 #include <sstream>
+#include <raymath.h>
 
 Circle::Circle(Vector2 center, float radius, Color color) 
     : m_center(center), m_radius(radius), m_color(color), m_colorBorder(BLACK) 
@@ -51,16 +52,6 @@ void Circle::RenderOptimized() {
     DrawCircleLinesV(m_center, m_radius, m_colorBorder);
 }
 
-void Circle::DrawSelection() {
-    float ctrlSize = 4.0f;
-    DrawCircleV({m_center.x - m_radius, m_center.y}, ctrlSize, BLUE);
-    DrawCircleV({m_center.x + m_radius, m_center.y}, ctrlSize, BLUE);
-    DrawCircleV({m_center.x, m_center.y - m_radius}, ctrlSize, BLUE);
-    DrawCircleV({m_center.x, m_center.y + m_radius}, ctrlSize, BLUE);
-    
-    DrawCircleLinesV(m_center, m_radius + 2.0f, RED);
-}
-
 void Circle::Move(Vector2 offset) {
     m_center.x += offset.x;
     m_center.y += offset.y;
@@ -85,3 +76,25 @@ std::string Circle::Serialize() const {
         << (m_color.r / 255.f) << " " << (m_color.g / 255.f) << " " << (m_color.b / 255.f);
     return oss.str();
 }
+
+void Circle::DrawSelection() {
+    DrawCircleLines(m_center.x, m_center.y, m_radius + 2, RED);
+    DrawCircleV({m_center.x + m_radius, m_center.y}, 4.0f, BLUE);
+}
+
+bool Circle::TryGrabControlPoint(Vector2 point) {
+    if (CheckCollisionPointCircle(point, {m_center.x + m_radius, m_center.y}, 8.0f)) {
+        m_draggingControlPoint = 0;
+        return true;
+    }
+    return false;
+}
+
+void Circle::DragControlPoint(Vector2 point) {
+    if (m_draggingControlPoint == 0) {
+        // Al arrastrar el punto, la distancia desde el centro se convierte en el nuevo radio
+        m_radius = Vector2Distance(m_center, point);
+    }
+}
+
+void Circle::StopDragging() { m_draggingControlPoint = -1; }

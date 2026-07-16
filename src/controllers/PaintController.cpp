@@ -89,13 +89,8 @@ void PaintController::HandleMouseDown(Vector2 mousePos) {
         m_document->SetSelectedShape(clickedShape);
         m_isMovingShape = true;
         m_isDraggingPoint = false;
-        
-        // Verificamos explícitamente si se agarró un punto de control
-        if (clickedShape->m_type == SHAPE_LINE) {
-            m_isDraggingPoint = ((Line*)clickedShape)->TryGrabControlPoint(mousePos);
-        } else if (clickedShape->m_type == SHAPE_BEZIER) {
-            m_isDraggingPoint = ((BezierCurve*)clickedShape)->TryGrabControlPoint(mousePos);
-        }
+        m_isDraggingPoint = clickedShape->TryGrabControlPoint(mousePos);
+    
         return;
     }
 
@@ -155,8 +150,7 @@ void PaintController::HandleMouseDrag(Vector2 mousePos) {
     else if (m_isMovingShape) {
         // Si agarramos un punto, lo arrastramos. Si no, movemos la figura entera.
         if (m_isDraggingPoint) {
-            if (selected->m_type == SHAPE_LINE) ((Line*)selected)->DragControlPoint(mousePos);
-            else if (selected->m_type == SHAPE_BEZIER) ((BezierCurve*)selected)->DragControlPoint(mousePos);
+            selected->DragControlPoint(mousePos);
         } else {
             Vector2 offset = { mousePos.x - m_lastMousePos.x, mousePos.y - m_lastMousePos.y };
             selected->Move(offset);
@@ -168,8 +162,7 @@ void PaintController::HandleMouseDrag(Vector2 mousePos) {
 void PaintController::HandleMouseUp() {
     Shape* selected = m_document->GetSelectedShape();
     if (selected) {
-        if (selected->m_type == SHAPE_LINE) ((Line*)selected)->StopDragging();
-        if (selected->m_type == SHAPE_BEZIER) ((BezierCurve*)selected)->StopDragging();
+        selected->StopDragging();
     }
 
     m_isDrawing = false;

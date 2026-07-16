@@ -6,6 +6,7 @@ private:
     Rectangle m_bounds;
     Color m_color;
     Color m_colorBorder;
+    int m_draggingControlPoint = -1;
 
 public:
     EllipseShape(Rectangle bounds, Color color);
@@ -26,4 +27,8 @@ public:
 
     void SetBounds(Rectangle bounds);
     std::string Serialize() const override;
+
+    bool TryGrabControlPoint(Vector2 point) override;
+    void DragControlPoint(Vector2 point) override;
+    void StopDragging() override;
 };

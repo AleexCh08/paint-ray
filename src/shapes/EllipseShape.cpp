@@ -110,3 +110,36 @@ std::string EllipseShape::Serialize() const {
         << (m_color.r / 255.f) << " " << (m_color.g / 255.f) << " " << (m_color.b / 255.f);
     return oss.str();
 }
+
+bool EllipseShape::TryGrabControlPoint(Vector2 point) {
+    float hitbox = 8.0f;
+    Vector2 pts[4] = {
+        {m_bounds.x + m_bounds.width/2, m_bounds.y},
+        {m_bounds.x + m_bounds.width/2, m_bounds.y + m_bounds.height},
+        {m_bounds.x, m_bounds.y + m_bounds.height/2},
+        {m_bounds.x + m_bounds.width, m_bounds.y + m_bounds.height/2}
+    };
+    for(int i=0; i<4; i++) {
+        if (CheckCollisionPointCircle(point, pts[i], hitbox)) {
+            m_draggingControlPoint = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+void EllipseShape::DragControlPoint(Vector2 point) {
+    if (m_draggingControlPoint == 0) { 
+        float diff = point.y - m_bounds.y; m_bounds.y = point.y; m_bounds.height -= diff;
+    } else if (m_draggingControlPoint == 1) { 
+        m_bounds.height = point.y - m_bounds.y;
+    } else if (m_draggingControlPoint == 2) { 
+        float diff = point.x - m_bounds.x; m_bounds.x = point.x; m_bounds.width -= diff;
+    } else if (m_draggingControlPoint == 3) { 
+        m_bounds.width = point.x - m_bounds.x;
+    }
+    if (m_bounds.width < 1) m_bounds.width = 1;
+    if (m_bounds.height < 1) m_bounds.height = 1;
+}
+
+void EllipseShape::StopDragging() { m_draggingControlPoint = -1; }

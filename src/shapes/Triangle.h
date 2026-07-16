@@ -6,6 +6,7 @@ private:
     Vector2 m_points[3];
     Color m_color;
     Color m_colorBorder;
+    int m_draggingControlPoint = -1;
 
 public:
     Triangle(Vector2 p1, Vector2 p2, Vector2 p3, Color color);
@@ -26,4 +27,8 @@ public:
 
     void SetPoints(Vector2 p1, Vector2 p2, Vector2 p3);
     std::string Serialize() const override;
+
+    bool TryGrabControlPoint(Vector2 point) override;
+    void DragControlPoint(Vector2 point) override;
+    void StopDragging() override;
 };

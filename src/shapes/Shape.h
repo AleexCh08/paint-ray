@@ -1,4 +1,3 @@
-// src/Shape.h
 #pragma once
 #include "raylib.h"
 #include <string>
@@ -36,6 +35,10 @@ public:
     
     virtual void SetColorBorder(Color color) = 0;
     virtual Color GetColorBorder() const = 0;
+
+    virtual bool TryGrabControlPoint(Vector2 point) { return false; }
+    virtual void DragControlPoint(Vector2 point) {}
+    virtual void StopDragging() {}
 
     virtual std::string Serialize() const = 0;
 };

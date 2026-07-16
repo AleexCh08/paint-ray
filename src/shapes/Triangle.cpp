@@ -115,3 +115,21 @@ std::string Triangle::Serialize() const {
         << (m_color.r / 255.f) << " " << (m_color.g / 255.f) << " " << (m_color.b / 255.f);
     return oss.str();
 }
+
+bool Triangle::TryGrabControlPoint(Vector2 point) {
+    for(int i=0; i<3; i++) {
+        if (CheckCollisionPointCircle(point, m_points[i], 8.0f)) {
+            m_draggingControlPoint = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+void Triangle::DragControlPoint(Vector2 point) {
+    if (m_draggingControlPoint != -1) {
+        m_points[m_draggingControlPoint] = point;
+    }
+}
+
+void Triangle::StopDragging() { m_draggingControlPoint = -1; }
