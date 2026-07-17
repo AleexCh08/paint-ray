@@ -10,6 +10,11 @@ void SplashScreen::Show(int screenWidth, int screenHeight) {
         UnloadImage(logo);
     }
 
+    Font splashFont = LoadFontEx("../assets/Roboto-Regular.ttf", 32, 0, 250);
+    if (splashFont.texture.id != 0) {
+        SetTextureFilter(splashFont.texture, TEXTURE_FILTER_BILINEAR);
+    }
+
     int framesCounter = 0;
 
     while (!WindowShouldClose()) {
@@ -25,11 +30,16 @@ void SplashScreen::Show(int screenWidth, int screenHeight) {
             int logoX = (screenWidth / 2) - (splashTexture.width / 2);
             int logoY = (screenHeight / 2) - (splashTexture.height / 2);
             DrawTexture(splashTexture, logoX, logoY, WHITE);
-            DrawText("Cargando entorno", screenWidth / 2 - 70, logoY + splashTexture.height + 20, 16, LIGHTGRAY);
+
+            const char* loadingText = "Cargando entorno...";
+            Vector2 textSize = MeasureTextEx(splashFont, loadingText, 16, 1);
+            float textX = (screenWidth / 2.0f) - (textSize.x / 2.0f);           
+            DrawTextEx(splashFont, loadingText, { textX, (float)(logoY + splashTexture.height + 20) }, 16, 1, LIGHTGRAY);
         }
         
         EndDrawing();
     }
 
     if (splashTexture.id != 0) UnloadTexture(splashTexture);
+    if (splashFont.texture.id != 0) UnloadFont(splashFont);
 }
