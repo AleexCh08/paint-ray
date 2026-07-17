@@ -42,5 +42,5 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS}
     src/core/SplashScreen.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 if(MINGW)
-    target_link_options(${PROJECT_NAME} PRIVATE "-mconsole")
+    target_link_options(${PROJECT_NAME} PRIVATE "-mwindows")
 endif()
