@@ -20,7 +20,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(raylib)
 
 if(WIN32)
-    string(REPLACE "-mwindows" "-mconsole" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+    string(REPLACE "-mconsole" "-mwindows" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 
