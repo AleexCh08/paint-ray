@@ -11,6 +11,23 @@ PaintView::PaintView(PaintDocument* document) : m_document(document) {
         GuiSetStyle(DEFAULT, TEXT_SIZE, 14);
     }
 
+    int iconCodepoints[8] = { 
+        0xEC0A, // Mover (ri-cursor-line)
+        0xEC9F, // Borrar (ri-eraser-line)
+        0xF1AF, // Línea (ri-line-line)
+        0xF3C1, // Círculo (ri-circle-line)
+        0xEB37, // Elipse (ri-capsule-line)
+        0xF3D6, // Rectángulo (ri-rectangle-line)
+        0xF3E4, // Triángulo (ri-triangle-line)
+        0xF69D  // Curva Bezier (ri-connector-line)
+    };
+
+    // Cargamos la fuente indicando explicitamente el arreglo de codepoints
+    m_iconFont = LoadFontEx("../assets/remixicon.ttf", 24, iconCodepoints, 8);
+    if (m_iconFont.texture.id != 0) {
+        SetTextureFilter(m_iconFont.texture, TEXTURE_FILTER_BILINEAR);
+    }
+
     // Estilo base solo para el ColorPicker, el resto es 100% custom
     GuiSetStyle(DEFAULT, BASE_COLOR_NORMAL, 0x2d2d30ff);
     GuiSetStyle(DEFAULT, BASE_COLOR_FOCUSED, 0x3e3e42ff);
@@ -21,6 +38,7 @@ PaintView::PaintView(PaintDocument* document) : m_document(document) {
 
 PaintView::~PaintView() {
     if (m_font.texture.id != 0) UnloadFont(m_font);
+    if (m_iconFont.texture.id != 0) UnloadFont(m_iconFont);
 }
 
 void PaintView::Render() {
@@ -86,46 +104,19 @@ void PaintView::Render() {
 
         Vector2 center = { btnRect.x + btnRect.width/2, btnRect.y + btnRect.height/2 };
         Color iconColor = isActive ? WHITE : (isHovered ? WHITE : Color{ 170, 170, 175, 255 });
-        
-        switch(i) {
-            case 0: 
-                DrawTriangle({center.x - 6, center.y - 10}, {center.x - 6, center.y + 10}, {center.x + 8, center.y + 2}, iconColor);
-                DrawLineEx({center.x - 2, center.y + 4}, {center.x + 4, center.y + 14}, 2.5f, iconColor);
-                break;
-            case 1: 
-                DrawRectangleRec({center.x - 8, center.y - 10, 16, 2}, Color{ 220, 80, 80, 255 });
-                DrawRectangleRec({center.x - 3, center.y - 13, 6, 3}, Color{ 220, 80, 80, 255 });
-                DrawRectangleLinesEx({center.x - 6, center.y - 8, 12, 18}, 2.0f, Color{ 220, 80, 80, 255 });
-                DrawLineEx({center.x - 2, center.y - 4}, {center.x - 2, center.y + 6}, 2.0f, Color{ 220, 80, 80, 255 });
-                DrawLineEx({center.x + 2, center.y - 4}, {center.x + 2, center.y + 6}, 2.0f, Color{ 220, 80, 80, 255 });
-                break;
-            case 2: 
-                DrawLineEx({center.x - 10, center.y + 10}, {center.x + 10, center.y - 10}, 2.0f, iconColor); 
-                DrawCircleV({center.x - 10, center.y + 10}, 2.5f, iconColor);
-                DrawCircleV({center.x + 10, center.y - 10}, 2.5f, iconColor);
-                break;
-            case 3: 
-                DrawCircleLines((int)center.x, (int)center.y, 12.0f, iconColor); 
-                DrawCircleV(center, 2.0f, iconColor);
-                break;
-            case 4: 
-                DrawEllipseLines((int)center.x, (int)center.y, 16.0f, 9.0f, iconColor); 
-                DrawCircleV(center, 2.0f, iconColor);
-                break;
-            case 5: 
-                DrawRectangleLinesEx({center.x - 12, center.y - 10, 24, 20}, 2.0f, iconColor); 
-                break;
-            case 6: 
-                DrawTriangleLines({center.x, center.y - 10}, {center.x - 12, center.y + 10}, {center.x + 12, center.y + 10}, iconColor); 
-                break;
-            case 7: 
-                DrawLineEx({center.x - 12, center.y + 8}, {center.x - 4, center.y - 12}, 1.0f, ColorAlpha(iconColor, 0.4f));
-                DrawLineEx({center.x + 12, center.y - 8}, {center.x + 4, center.y + 12}, 1.0f, ColorAlpha(iconColor, 0.4f));
-                DrawSplineSegmentBezierCubic({center.x - 12, center.y + 8}, {center.x - 4, center.y - 12}, {center.x + 4, center.y + 12}, {center.x + 12, center.y - 8}, 2.0f, iconColor); 
-                DrawCircleV({center.x - 12, center.y + 8}, 2.0f, iconColor);
-                DrawCircleV({center.x + 12, center.y - 8}, 2.0f, iconColor);
-                break; 
-        }
+        if (i == 1) iconColor = Color{ 220, 80, 80, 255 }; // El boton de borrar se mantiene rojo
+
+        int iconCodepoints[8] = { 0xEC0A, 0xEC9F, 0xF1AF, 0xF3C1, 0xEB37, 0xF3D6, 0xF3E4, 0xF69D  };
+
+        // Convertimos el codepoint a una cadena UTF-8 entendible por Raylib
+        int bytesResult = 0;
+        const char* iconStr = CodepointToUTF8(iconCodepoints[i], &bytesResult);
+
+        // Centramos el icono vectorial dinámicamente en el botón
+        Vector2 iconSize = MeasureTextEx(m_iconFont, iconStr, 22, 1);
+        Vector2 iconPos = { center.x - (iconSize.x / 2.0f), center.y - (iconSize.y / 2.0f) };
+
+        DrawTextEx(m_iconFont, iconStr, iconPos, 22, 1, iconColor);
     }
 
     // --- 3. PANEL DERECHO (INSPECTOR MODERNO) ---
